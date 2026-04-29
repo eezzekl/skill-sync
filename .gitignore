@@ -1,0 +1,32 @@
+# Binaries (root only — don't shadow cmd/skill-sync/)
+/skill-sync
+/skill-sync.exe
+*.exe
+*.exe~
+
+# Local config (contains absolute paths)
+skill-sync.yaml
+
+# Coverage artifacts
+coverage
+coverage.out
+sync_cover
+sync_cover.out
+*.cover
+*.out
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# archivos locales de contexto
+/context
+
+# SDD skill registry (contiene rutas absolutas de la máquina local)
+.atl/
+

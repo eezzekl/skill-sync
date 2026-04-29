@@ -1,0 +1,11 @@
+## skill-sync.yaml — example configuration
+## Copy this file to skill-sync.yaml and adjust paths for your setup.
+##
+## targets: list of directories to keep in sync.
+## Tilde (~) is expanded to your home directory on all platforms.
+
+targets:
+  - ~/.claude
+  - ~/.cursor
+  - ~/.gemini
+  - ~/.opencode
