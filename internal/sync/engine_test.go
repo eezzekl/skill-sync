@@ -33,8 +33,8 @@ func TestEngine_Sync(t *testing.T) {
 			targetDirs: 1,
 			wantErr:    false,
 			setup: func(t *testing.T, winnerPath string, targetDirs []string) {
-				// Pre-create the file in target dir
-				dest := filepath.Join(targetDirs[0], "my-skill", "SKILL.md")
+				// Pre-create the file in target dir under skills/
+				dest := filepath.Join(targetDirs[0], "skills", "my-skill", "SKILL.md")
 				err := os.MkdirAll(filepath.Dir(dest), 0755)
 				if err != nil {
 					t.Fatalf("failed to mkdir: %v", err)
@@ -111,7 +111,7 @@ func TestEngine_Sync(t *testing.T) {
 				if filepath.Base(filepath.Dir(target)) == "nonexistent-base" {
 					continue
 				}
-				dest := filepath.Join(target, "my-skill", "SKILL.md")
+				dest := filepath.Join(target, "skills", "my-skill", "SKILL.md")
 				b, err := os.ReadFile(dest)
 				if err != nil {
 					t.Errorf("failed to read dest: %v", err)
@@ -122,7 +122,7 @@ func TestEngine_Sync(t *testing.T) {
 
 				// Check backup if this was an overwrite test
 				if tt.name == "backs up existing file before overwrite" {
-					bakPath := filepath.Join(target, "my-skill", "SKILL.md.bak")
+					bakPath := filepath.Join(target, "skills", "my-skill", "SKILL.md.bak")
 					bak, err := os.ReadFile(bakPath)
 					if err != nil {
 						t.Errorf("failed to read backup: %v", err)
@@ -171,13 +171,12 @@ func TestEngine_Sync_ErrorPaths(t *testing.T) {
 		}
 		winner := models.SkillInstance{ID: "my-skill", Path: winnerPath}
 
-		// Place a regular file where MkdirAll would try to create targetDir/my-skill/
+		// Place a regular file named "skills" so MkdirAll(skills/) fails
 		targetDir := filepath.Join(base, "target")
 		if err := os.MkdirAll(targetDir, 0755); err != nil {
 			t.Fatalf("setup failed: %v", err)
 		}
-		// Create a file named "my-skill" (same name engine will try to mkdir)
-		blockingFile := filepath.Join(targetDir, "my-skill")
+		blockingFile := filepath.Join(targetDir, "skills")
 		if err := os.WriteFile(blockingFile, []byte("blocker"), 0644); err != nil {
 			t.Fatalf("setup failed: %v", err)
 		}
@@ -203,8 +202,8 @@ func TestEngine_Sync_ErrorPaths(t *testing.T) {
 		}
 		winner := models.SkillInstance{ID: "my-skill", Path: winnerPath}
 
-		// Create the destDir, then make it read-only so rename into it fails
-		destDir := filepath.Join(base, "target", "my-skill")
+		// Create the destDir under skills/, then make it read-only so rename fails
+		destDir := filepath.Join(base, "target", "skills", "my-skill")
 		if err := os.MkdirAll(destDir, 0755); err != nil {
 			t.Fatalf("setup failed: %v", err)
 		}
@@ -242,9 +241,9 @@ func TestEngine_Sync_ErrorPaths(t *testing.T) {
 		}
 		winner := models.SkillInstance{ID: "my-skill", Path: winnerPath}
 
-		// Pre-create target with an existing SKILL.md so backup is triggered
+		// Pre-create target with an existing SKILL.md under skills/ so backup is triggered
 		targetDir := filepath.Join(base, "target")
-		skillDir := filepath.Join(targetDir, "my-skill")
+		skillDir := filepath.Join(targetDir, "skills", "my-skill")
 		if err := os.MkdirAll(skillDir, 0755); err != nil {
 			t.Fatalf("setup failed: %v", err)
 		}

@@ -27,13 +27,14 @@ func (s *defaultScanner) Scan(targetDirs []string) (map[string][]models.SkillIns
 	result := make(map[string][]models.SkillInstance)
 
 	for _, targetDir := range targetDirs {
-		err := filepath.WalkDir(targetDir, func(path string, d fs.DirEntry, err error) error {
+		skillsDir := filepath.Join(targetDir, "skills")
+
+		err := filepath.WalkDir(skillsDir, func(path string, d fs.DirEntry, err error) error {
 			if err != nil {
-				// If the target directory doesn't exist, skip it
-				if os.IsNotExist(err) && path == targetDir {
+				if os.IsNotExist(err) && path == skillsDir {
 					return filepath.SkipDir
 				}
-				return err // Other errors should be reported
+				return err
 			}
 
 			// We are only looking for SKILL.md files
@@ -75,7 +76,7 @@ func (s *defaultScanner) Scan(targetDirs []string) (map[string][]models.SkillIns
 		})
 
 		if err != nil {
-			return nil, fmt.Errorf("failed to scan %s: %w", targetDir, err)
+			return nil, fmt.Errorf("failed to scan %s: %w", skillsDir, err)
 		}
 	}
 

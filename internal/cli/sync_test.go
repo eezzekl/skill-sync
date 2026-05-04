@@ -9,10 +9,10 @@ import (
 	"github.com/ezzek/skill-sync/internal/cli"
 )
 
-// helper: create a SKILL.md file with given content at <dir>/<skillID>/SKILL.md
+// helper: create a SKILL.md file with given content at <dir>/skills/<skillID>/SKILL.md
 func writeSkillFile(t *testing.T, dir, skillID, content string) {
 	t.Helper()
-	skillDir := filepath.Join(dir, skillID)
+	skillDir := filepath.Join(dir, "skills", skillID)
 	if err := os.MkdirAll(skillDir, 0755); err != nil {
 		t.Fatalf("failed to create skill dir: %v", err)
 	}
@@ -94,7 +94,7 @@ func TestNewSyncCmd(t *testing.T) {
 			},
 			verify: func(t *testing.T, toolA, toolB string) {
 				// toolB should now have version 2 content
-				got, err := os.ReadFile(filepath.Join(toolB, "my-skill", "SKILL.md"))
+				got, err := os.ReadFile(filepath.Join(toolB, "skills", "my-skill", "SKILL.md"))
 				if err != nil {
 					t.Fatalf("failed to read synced file: %v", err)
 				}
@@ -119,7 +119,7 @@ func TestNewSyncCmd(t *testing.T) {
 			},
 			verify: func(t *testing.T, toolA, toolB string) {
 				// Both targets remain unchanged - verify B still has identical content
-				got, err := os.ReadFile(filepath.Join(toolB, "identical-skill", "SKILL.md"))
+				got, err := os.ReadFile(filepath.Join(toolB, "skills", "identical-skill", "SKILL.md"))
 				if err != nil {
 					t.Fatalf("failed to read file: %v", err)
 				}
@@ -160,7 +160,7 @@ func TestNewSyncCmd(t *testing.T) {
 			},
 			verify: func(t *testing.T, toolA, toolB string) {
 				// toolB must now contain the skill file propagated from toolA
-				destPath := filepath.Join(toolB, "new-skill", "SKILL.md")
+				destPath := filepath.Join(toolB, "skills", "new-skill", "SKILL.md")
 				got, err := os.ReadFile(destPath)
 				if err != nil {
 					t.Fatalf("expected skill file to be created in empty target, but read failed: %v", err)

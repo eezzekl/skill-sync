@@ -17,9 +17,9 @@ func TestScanner_Scan(t *testing.T) {
 	targetA := filepath.Join(tempDir, "targetA")
 	targetB := filepath.Join(tempDir, "targetB")
 
-	os.MkdirAll(filepath.Join(targetA, "skill-1"), 0755)
-	os.MkdirAll(filepath.Join(targetB, "skill-1"), 0755)
-	os.MkdirAll(filepath.Join(targetA, "skill-2"), 0755)
+	os.MkdirAll(filepath.Join(targetA, "skills", "skill-1"), 0755)
+	os.MkdirAll(filepath.Join(targetB, "skills", "skill-1"), 0755)
+	os.MkdirAll(filepath.Join(targetA, "skills", "skill-2"), 0755)
 
 	content1A := []byte(`---
 version: 1
@@ -42,13 +42,13 @@ name: Skill Two
 # Skill Two
 Body`)
 
-	os.WriteFile(filepath.Join(targetA, "skill-1", "SKILL.md"), content1A, 0644)
-	os.WriteFile(filepath.Join(targetB, "skill-1", "SKILL.md"), content1B, 0644)
-	os.WriteFile(filepath.Join(targetA, "skill-2", "SKILL.md"), content2A, 0644)
+	os.WriteFile(filepath.Join(targetA, "skills", "skill-1", "SKILL.md"), content1A, 0644)
+	os.WriteFile(filepath.Join(targetB, "skills", "skill-1", "SKILL.md"), content1B, 0644)
+	os.WriteFile(filepath.Join(targetA, "skills", "skill-2", "SKILL.md"), content2A, 0644)
 
 	// Additional non-skill files that should be ignored
-	os.WriteFile(filepath.Join(targetA, "skill-1", "OTHER.md"), []byte("Ignore me"), 0644)
-	os.MkdirAll(filepath.Join(targetB, "empty-dir"), 0755)
+	os.WriteFile(filepath.Join(targetA, "skills", "skill-1", "OTHER.md"), []byte("Ignore me"), 0644)
+	os.MkdirAll(filepath.Join(targetB, "skills", "empty-dir"), 0755)
 
 	scanner := mesh.NewDefaultScanner()
 

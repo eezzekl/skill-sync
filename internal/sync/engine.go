@@ -37,16 +37,21 @@ func (e *engine) Sync(winner models.SkillInstance, targetDirs []string) error {
 	for _, targetDir := range targetDirs {
 		baseDir := filepath.Dir(targetDir)
 		if stat, err := os.Stat(baseDir); err != nil || !stat.IsDir() {
-			continue // Base dir doesn't exist, skip creating the target
+			continue
 		}
 
 		if err := os.MkdirAll(targetDir, 0755); err != nil {
-			return fmt.Errorf("failed to create target dir: %w", err)
+			return fmt.Errorf("failed to create agent dir: %w", err)
 		}
 
-		destDir := filepath.Join(targetDir, winner.ID)
+		skillsDir := filepath.Join(targetDir, "skills")
+		if err := os.MkdirAll(skillsDir, 0755); err != nil {
+			return fmt.Errorf("failed to create skills dir: %w", err)
+		}
+
+		destDir := filepath.Join(skillsDir, winner.ID)
 		if err := os.MkdirAll(destDir, 0755); err != nil {
-			return fmt.Errorf("failed to create target dir: %w", err)
+			return fmt.Errorf("failed to create skill dir: %w", err)
 		}
 
 		destPath := filepath.Join(destDir, "SKILL.md")

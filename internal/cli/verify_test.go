@@ -142,7 +142,7 @@ func TestVerifyCmd_DoesNotWriteFiles(t *testing.T) {
 	cfgPath := writeConfigFile(t, base, []string{toolA, toolB})
 
 	// Record original content of toolB before running verify
-	origPath := filepath.Join(toolB, "test-skill", "SKILL.md")
+	origPath := filepath.Join(toolB, "skills", "test-skill", "SKILL.md")
 	origContent, err := os.ReadFile(origPath)
 	if err != nil {
 		t.Fatalf("failed to read original file: %v", err)
