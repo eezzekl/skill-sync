@@ -40,8 +40,8 @@ var (
 			PaddingLeft(2)
 
 	ListItemSelectedStyle = lipgloss.NewStyle().
-			PaddingLeft(2).
-			Foreground(ColorHighlight)
+				PaddingLeft(2).
+				Foreground(ColorHighlight)
 
 	CheckboxCheckedStyle = lipgloss.NewStyle().
 				Foreground(ColorPrimary).

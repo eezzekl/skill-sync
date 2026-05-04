@@ -80,7 +80,7 @@ func TestSharedToggle_Update(t *testing.T) {
 			// Deep copy items for safety
 			testItems := make([]Item, len(tt.startItems))
 			copy(testItems, tt.startItems)
-			
+
 			m := New(testItems)
 			m.Cursor = tt.startCursor
 
@@ -173,7 +173,7 @@ func TestSharedToggle_Teatest(t *testing.T) {
 	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
 
 	finalModel := tm.FinalModel(t).(Model)
-	
+
 	if finalModel.Cursor != 1 {
 		t.Errorf("expected cursor 1, got %d", finalModel.Cursor)
 	}
@@ -182,12 +182,12 @@ func TestSharedToggle_Teatest(t *testing.T) {
 	if len(selected) != 2 {
 		t.Errorf("expected 2 selected items, got %d", len(selected))
 	}
-	
+
 	out, err := io.ReadAll(tm.Output())
 	if err != nil {
 		t.Fatal(err)
 	}
-	
+
 	if !bytes.Contains(out, []byte("Test1")) {
 		t.Errorf("output should contain 'Test1'")
 	}

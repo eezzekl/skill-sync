@@ -80,14 +80,14 @@ func TestEngine_Sync(t *testing.T) {
 			var targetDirs []string
 			for i := 0; i < tt.targetDirs; i++ {
 				dirPath := filepath.Join(targetBase, string(rune('A'+i)))
-				
+
 				if tt.name == "skips missing base dirs but succeeds if one is valid" && i == 0 {
 					dirPath = filepath.Join(t.TempDir(), "nonexistent-base", string(rune('A'+i)))
 				}
 				if tt.name == "returns error when all base dirs are missing" {
 					dirPath = filepath.Join(t.TempDir(), "nonexistent-base", string(rune('A'+i)))
 				}
-				
+
 				targetDirs = append(targetDirs, dirPath)
 			}
 

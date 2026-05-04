@@ -12,10 +12,10 @@ import (
 
 func TestNewVerifyCmd(t *testing.T) {
 	tests := []struct {
-		name       string
-		setup      func(t *testing.T) string
-		wantDrift  bool // true = expect exit code 1 (drift), false = clean
-		wantErr    bool
+		name      string
+		setup     func(t *testing.T) string
+		wantDrift bool // true = expect exit code 1 (drift), false = clean
+		wantErr   bool
 	}{
 		{
 			name: "no drift when all skills are identical",

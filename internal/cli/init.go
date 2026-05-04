@@ -33,8 +33,8 @@ func NewInitCmd() *cobra.Command {
 }
 
 var (
-	getWd         = os.Getwd
-	getUserConfig = os.UserConfigDir
+	getWd                   = os.Getwd
+	getUserConfig           = os.UserConfigDir
 	stdinReader   io.Reader = os.Stdin
 	isTTY                   = func() bool {
 		st, err := os.Stdin.Stat()

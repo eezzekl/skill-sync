@@ -29,7 +29,7 @@ func TestConfigView_Update(t *testing.T) {
 	// Test 's' to save
 	newM, cmd := m.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("s")})
 	m = newM.(Model)
-	
+
 	if cmd == nil {
 		t.Fatal("expected command on save")
 	}
