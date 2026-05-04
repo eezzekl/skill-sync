@@ -11,7 +11,7 @@ import (
 // If destPath already exists, it creates a .bak backup file before overwriting.
 func AtomicWrite(destPath string, content []byte) error {
 	destDir := filepath.Dir(destPath)
-	
+
 	// Backup if exists
 	if _, err := os.Stat(destPath); err == nil {
 		bakPath := destPath + ".bak"

@@ -10,21 +10,21 @@ import (
 
 func TestScan(t *testing.T) {
 	tmpDir := t.TempDir()
-	
+
 	cwdDir := filepath.Join(tmpDir, "cwd")
 	homeDir := filepath.Join(tmpDir, "home")
-	
+
 	os.MkdirAll(cwdDir, 0755)
 	os.MkdirAll(homeDir, 0755)
-	
+
 	tests := []struct {
 		name         string
 		setupFunc    func()
 		expectedDirs []string
 	}{
 		{
-			name: "no directories exist",
-			setupFunc: func() {},
+			name:         "no directories exist",
+			setupFunc:    func() {},
 			expectedDirs: []string{},
 		},
 		{
@@ -55,7 +55,7 @@ func TestScan(t *testing.T) {
 				os.MkdirAll(filepath.Join(cwdDir, ".codex"), 0755)
 				os.MkdirAll(filepath.Join(cwdDir, ".codeium", "windsurf"), 0755)
 				os.MkdirAll(filepath.Join(cwdDir, ".copilot"), 0755)
-				
+
 				// Global
 				os.MkdirAll(filepath.Join(homeDir, ".config", "opencode"), 0755)
 				os.MkdirAll(filepath.Join(homeDir, ".claude"), 0755)
@@ -86,7 +86,7 @@ func TestScan(t *testing.T) {
 			},
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Clear directories for isolation
@@ -94,9 +94,9 @@ func TestScan(t *testing.T) {
 			os.RemoveAll(homeDir)
 			os.MkdirAll(cwdDir, 0755)
 			os.MkdirAll(homeDir, 0755)
-			
+
 			tt.setupFunc()
-			
+
 			d := &Discovery{
 				Getwd: func() (string, error) {
 					return cwdDir, nil
@@ -105,16 +105,16 @@ func TestScan(t *testing.T) {
 					return homeDir, nil
 				},
 			}
-			
+
 			dirs, err := d.Scan()
 			if err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}
-			
+
 			// Sort slices to make comparison stable
 			sort.Strings(dirs)
 			sort.Strings(tt.expectedDirs)
-			
+
 			if !reflect.DeepEqual(dirs, tt.expectedDirs) {
 				t.Errorf("expected %v, got %v", tt.expectedDirs, dirs)
 			}

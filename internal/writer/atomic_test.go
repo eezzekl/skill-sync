@@ -78,12 +78,12 @@ func TestAtomicWrite(t *testing.T) {
 	t.Run("returns error when target directory does not exist", func(t *testing.T) {
 		dir := t.TempDir()
 		destPath := filepath.Join(dir, "nonexistent", "target.txt")
-		
+
 		err := AtomicWrite(destPath, []byte("data"))
 		if err == nil {
 			t.Fatalf("expected error, got nil")
 		}
-		
+
 		if !strings.Contains(err.Error(), "no such file or directory") && !strings.Contains(err.Error(), "The system cannot find the path specified") {
 			t.Errorf("expected path error, got %v", err)
 		}

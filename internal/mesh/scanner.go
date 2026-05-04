@@ -85,7 +85,7 @@ func (s *defaultScanner) Scan(targetDirs []string) (map[string][]models.SkillIns
 
 func parseFrontmatter(content []byte) models.SkillMetadata {
 	str := string(content)
-	
+
 	// Check if the file starts with "---"
 	if !strings.HasPrefix(str, "---\n") && !strings.HasPrefix(str, "---\r\n") {
 		return models.SkillMetadata{}

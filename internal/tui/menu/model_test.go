@@ -32,7 +32,7 @@ func TestMenuSelection(t *testing.T) {
 	if cmd2 == nil {
 		t.Fatal("Expected command to be returned on enter after moving down")
 	}
-	
+
 	msg2 := cmd2()
 	selMsg2, ok := msg2.(MenuSelectionMsg)
 	if !ok {

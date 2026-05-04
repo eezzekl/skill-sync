@@ -1,8 +1,8 @@
 package agent
 
 import (
-	"io"
 	"gopkg.in/yaml.v3"
+	"io"
 )
 
 // Config represents the parsed contents of skill-sync.yaml.

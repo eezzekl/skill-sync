@@ -42,10 +42,10 @@ targets:
 			wantErr: true,
 		},
 		{
-			name: "Empty config",
-			input: ``,
+			name:     "Empty config",
+			input:    ``,
 			expected: &agent.Config{},
-			wantErr: false,
+			wantErr:  false,
 		},
 	}
 

@@ -14,27 +14,27 @@ func TestResolver_Resolve(t *testing.T) {
 	newer := now.Add(1 * time.Hour)
 
 	tests := []struct {
-		name          string
-		instances     []models.SkillInstance
-		expectWinner  *models.SkillInstance
+		name           string
+		instances      []models.SkillInstance
+		expectWinner   *models.SkillInstance
 		expectConflict bool
 		expectErr      bool
 	}{
 		{
-			name:      "empty instances",
-			instances: []models.SkillInstance{},
-			expectWinner: nil,
+			name:           "empty instances",
+			instances:      []models.SkillInstance{},
+			expectWinner:   nil,
 			expectConflict: false,
-			expectErr: true, // Should error on empty
+			expectErr:      true, // Should error on empty
 		},
 		{
 			name: "single instance",
 			instances: []models.SkillInstance{
 				{TargetDir: "dir1", Hash: "aaa"},
 			},
-			expectWinner: &models.SkillInstance{TargetDir: "dir1", Hash: "aaa"},
+			expectWinner:   &models.SkillInstance{TargetDir: "dir1", Hash: "aaa"},
 			expectConflict: false,
-			expectErr: false,
+			expectErr:      false,
 		},
 		{
 			name: "identical hashes",
@@ -42,9 +42,9 @@ func TestResolver_Resolve(t *testing.T) {
 				{TargetDir: "dir1", Hash: "aaa", Mtime: older, Metadata: models.SkillMetadata{Version: 1}},
 				{TargetDir: "dir2", Hash: "aaa", Mtime: newer, Metadata: models.SkillMetadata{Version: 2}},
 			},
-			expectWinner: &models.SkillInstance{TargetDir: "dir1", Hash: "aaa", Mtime: older, Metadata: models.SkillMetadata{Version: 1}},
+			expectWinner:   &models.SkillInstance{TargetDir: "dir1", Hash: "aaa", Mtime: older, Metadata: models.SkillMetadata{Version: 1}},
 			expectConflict: false, // If hashes match, we just pick the first
-			expectErr: false,
+			expectErr:      false,
 		},
 		{
 			name: "decimal versions resolve correctly (1.0 < 1.1 < 1.2)",
@@ -53,9 +53,9 @@ func TestResolver_Resolve(t *testing.T) {
 				{TargetDir: "cursor", Hash: "bbb", Metadata: models.SkillMetadata{Version: 1.1}},
 				{TargetDir: "opencode", Hash: "ccc", Metadata: models.SkillMetadata{Version: 1.2}},
 			},
-			expectWinner: &models.SkillInstance{TargetDir: "opencode", Hash: "ccc", Metadata: models.SkillMetadata{Version: 1.2}},
+			expectWinner:   &models.SkillInstance{TargetDir: "opencode", Hash: "ccc", Metadata: models.SkillMetadata{Version: 1.2}},
 			expectConflict: false,
-			expectErr: false,
+			expectErr:      false,
 		},
 		{
 			name: "highest version wins",
@@ -64,9 +64,9 @@ func TestResolver_Resolve(t *testing.T) {
 				{TargetDir: "dir2", Hash: "bbb", Metadata: models.SkillMetadata{Version: 3}},
 				{TargetDir: "dir3", Hash: "ccc", Metadata: models.SkillMetadata{Version: 2}},
 			},
-			expectWinner: &models.SkillInstance{TargetDir: "dir2", Hash: "bbb", Metadata: models.SkillMetadata{Version: 3}},
+			expectWinner:   &models.SkillInstance{TargetDir: "dir2", Hash: "bbb", Metadata: models.SkillMetadata{Version: 3}},
 			expectConflict: false,
-			expectErr: false,
+			expectErr:      false,
 		},
 		{
 			name: "newer mtime wins on identical versions",
@@ -74,9 +74,9 @@ func TestResolver_Resolve(t *testing.T) {
 				{TargetDir: "dir1", Hash: "aaa", Mtime: older, Metadata: models.SkillMetadata{Version: 1}},
 				{TargetDir: "dir2", Hash: "bbb", Mtime: newer, Metadata: models.SkillMetadata{Version: 1}},
 			},
-			expectWinner: &models.SkillInstance{TargetDir: "dir2", Hash: "bbb", Mtime: newer, Metadata: models.SkillMetadata{Version: 1}},
+			expectWinner:   &models.SkillInstance{TargetDir: "dir2", Hash: "bbb", Mtime: newer, Metadata: models.SkillMetadata{Version: 1}},
 			expectConflict: false,
-			expectErr: false,
+			expectErr:      false,
 		},
 		{
 			name: "newer mtime wins on missing versions (0)",
@@ -84,9 +84,9 @@ func TestResolver_Resolve(t *testing.T) {
 				{TargetDir: "dir1", Hash: "aaa", Mtime: older},
 				{TargetDir: "dir2", Hash: "bbb", Mtime: newer},
 			},
-			expectWinner: &models.SkillInstance{TargetDir: "dir2", Hash: "bbb", Mtime: newer},
+			expectWinner:   &models.SkillInstance{TargetDir: "dir2", Hash: "bbb", Mtime: newer},
 			expectConflict: false,
-			expectErr: false,
+			expectErr:      false,
 		},
 		{
 			name: "conflict: different hashes, identical version and mtime",
@@ -94,9 +94,9 @@ func TestResolver_Resolve(t *testing.T) {
 				{TargetDir: "dir1", Hash: "aaa", Mtime: now, Metadata: models.SkillMetadata{Version: 2}},
 				{TargetDir: "dir2", Hash: "bbb", Mtime: now, Metadata: models.SkillMetadata{Version: 2}},
 			},
-			expectWinner: nil,
+			expectWinner:   nil,
 			expectConflict: true,
-			expectErr: false,
+			expectErr:      false,
 		},
 		{
 			name: "conflict: identical versions, one has no mtime (somehow), both zero mtimes",
@@ -104,9 +104,9 @@ func TestResolver_Resolve(t *testing.T) {
 				{TargetDir: "dir1", Hash: "aaa", Mtime: time.Time{}, Metadata: models.SkillMetadata{Version: 2}},
 				{TargetDir: "dir2", Hash: "bbb", Mtime: time.Time{}, Metadata: models.SkillMetadata{Version: 2}},
 			},
-			expectWinner: nil,
+			expectWinner:   nil,
 			expectConflict: true,
-			expectErr: false,
+			expectErr:      false,
 		},
 	}
 
