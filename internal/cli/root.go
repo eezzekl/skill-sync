@@ -8,10 +8,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewRootCmd() *cobra.Command {
+func NewRootCmd(version string) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "skill-sync",
-		Short: "skill-sync synchronizes AI agent skills across directories",
+		Use:     "skill-sync",
+		Short:   "skill-sync synchronizes AI agent skills across directories",
+		Version: version,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			callbacks := tui.Callbacks{
 				ScanSkills: func() ([]models.SkillSyncInfo, error) {

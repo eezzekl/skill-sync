@@ -8,89 +8,27 @@ on:
 permissions:
   contents: write
 
-
 jobs:
-  build:
-    name: Build ${{ matrix.goos }}/${{ matrix.goarch }}
+  release:
+    name: GoReleaser
     runs-on: ubuntu-latest
-    if: github.event.base_ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
-    strategy:
-      matrix:
-        include:
-          - goos: linux
-            goarch: amd64
-            suffix: ""
-            archive: tar.gz
-          - goos: linux
-            goarch: arm64
-            suffix: ""
-            archive: tar.gz
-          - goos: darwin
-            goarch: amd64
-            suffix: ""
-            archive: tar.gz
-          - goos: darwin
-            goarch: arm64
-            suffix: ""
-            archive: tar.gz
-          - goos: windows
-            goarch: amd64
-            suffix: .exe
-            archive: zip
-          - goos: windows
-            goarch: arm64
-            suffix: .exe
-            archive: zip
-
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
+          cache: true
 
-      - name: Build
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          distribution: goreleaser
+          version: "~> v2"
+          args: release --clean
         env:
-          GOOS: ${{ matrix.goos }}
-          GOARCH: ${{ matrix.goarch }}
-          CGO_ENABLED: "0"
-        run: |
-          go build -trimpath -ldflags="-s -w -X main.version=${{ github.ref_name }}" \
-            -o skill-sync${{ matrix.suffix }} ./cmd/skill-sync
-
-      - name: Package (tar.gz)
-        if: matrix.archive == 'tar.gz'
-        run: |
-          tar -czf skill-sync_${{ github.ref_name }}_${{ matrix.goos }}_${{ matrix.goarch }}.tar.gz \
-            skill-sync skill-sync.example.yaml
-
-      - name: Package (zip)
-        if: matrix.archive == 'zip'
-        run: |
-          zip skill-sync_${{ github.ref_name }}_${{ matrix.goos }}_${{ matrix.goarch }}.zip \
-            skill-sync${{ matrix.suffix }} skill-sync.example.yaml
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: skill-sync_${{ matrix.goos }}_${{ matrix.goarch }}
-          path: skill-sync_${{ github.ref_name }}_${{ matrix.goos }}_${{ matrix.goarch }}.${{ matrix.archive }}
-
-  release:
-    name: Create Release
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: dist
-          merge-multiple: true
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: dist/*
-          generate_release_notes: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          SCOOP_BUCKET_TOKEN: ${{ secrets.SCOOP_BUCKET_TOKEN }}
