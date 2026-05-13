@@ -6,22 +6,35 @@ It uses a mesh/P2P strategy: no "source of truth" directory. The skill with the 
 
 ## Install
 
-### Option A — Go install (requires Go 1.21+)
+### Option A — Homebrew (macOS and Linux)
 
 ```sh
-go install github.com/ezzek/skill-sync/cmd/skill-sync@latest
+brew install eezzekl/tap/skill-sync
+```
+
+### Option B — Scoop (Windows)
+
+```powershell
+scoop bucket add eezzekl https://github.com/eezzekl/scoop-bucket
+scoop install skill-sync
+```
+
+### Option C — Go install (requires Go 1.21+)
+
+```sh
+go install github.com/eezzekl/skill-sync/cmd/skill-sync@latest
 ```
 
 The binary is placed in `$GOPATH/bin` (usually `~/go/bin`). Make sure that directory is in your `PATH`.
 
 ```sh
-# Add to ~/.bashrc, ~/.zshrc, or equivalent:
+# Add to ~/.zshrc, ~/.bashrc, or equivalent:
 export PATH="$PATH:$(go env GOPATH)/bin"
 ```
 
-### Option B — Download pre-built binary
+### Option D — Download pre-built binary
 
-Go to the [Releases page](https://github.com/ezzek/skill-sync/releases) and download the archive for your platform:
+Go to the [Releases page](https://github.com/eezzekl/skill-sync/releases) and download the archive for your platform:
 
 | Platform | File |
 |---|---|
