@@ -1,0 +1,78 @@
+version: 2
+
+project_name: skill-sync
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: skill-sync
+    main: ./cmd/skill-sync
+    binary: skill-sync
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X main.version={{ .Version }}
+    flags:
+      - -trimpath
+
+archives:
+  - id: skill-sync
+    formats:
+      - tar.gz
+    format_overrides:
+      - goos: windows
+        formats:
+          - zip
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - skill-sync.example.yaml
+      - README.md
+      - LICENSE
+
+checksum:
+  name_template: "{{ .ProjectName }}_{{ .Version }}_checksums.txt"
+  algorithm: sha256
+
+changelog:
+  use: github
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+      - Merge pull request
+      - Merge branch
+
+brews:
+  - name: skill-sync
+    repository:
+      owner: eezzekl
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
+    homepage: https://github.com/eezzekl/skill-sync
+    description: Synchronizes AI agent skills across tool directories (Claude, Cursor, OpenCode, etc.)
+    license: MIT
+    install: |
+      bin.install "skill-sync"
+    test: |
+      system "#{bin}/skill-sync", "--version"
+
+scoops:
+  - name: skill-sync
+    repository:
+      owner: eezzekl
+      name: scoop-bucket
+      token: "{{ .Env.SCOOP_BUCKET_TOKEN }}"
+    homepage: https://github.com/eezzekl/skill-sync
+    description: Synchronizes AI agent skills across tool directories (Claude, Cursor, OpenCode, etc.)
+    license: MIT
