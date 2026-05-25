@@ -62,6 +62,10 @@ func runVerify(cmd *cobra.Command, configPath string) error {
 		return fmt.Errorf("failed to parse config: %w", err)
 	}
 
+	if home, err := os.UserHomeDir(); err == nil {
+		cfg.ExpandTargets(home)
+	}
+
 	scanner := mesh.NewDefaultScanner()
 	skillMap, err := scanner.Scan(cfg.Targets)
 	if err != nil {

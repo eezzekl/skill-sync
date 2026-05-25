@@ -27,7 +27,10 @@ func (s *defaultScanner) Scan(targetDirs []string) (map[string][]models.SkillIns
 	result := make(map[string][]models.SkillInstance)
 
 	for _, targetDir := range targetDirs {
-		skillsDir := filepath.Join(targetDir, "skills")
+		skillsDir := targetDir
+		if filepath.Base(targetDir) != "skills" {
+			skillsDir = filepath.Join(targetDir, "skills")
+		}
 
 		err := filepath.WalkDir(skillsDir, func(path string, d fs.DirEntry, err error) error {
 			if err != nil {

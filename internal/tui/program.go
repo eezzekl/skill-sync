@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/ezzek/skill-sync/internal/agent"
@@ -15,6 +16,7 @@ import (
 	"github.com/ezzek/skill-sync/internal/tui/menu"
 	"github.com/ezzek/skill-sync/internal/tui/output_view"
 	"github.com/ezzek/skill-sync/internal/tui/sync_select_view"
+	"github.com/ezzek/skill-sync/internal/writer"
 	"gopkg.in/yaml.v3"
 )
 
@@ -203,9 +205,16 @@ func (m RootModel) View() string {
 }
 
 func saveConfig(targets []string) string {
-	configPath := "skill-sync.yaml"
+	configPath := ""
 	if cfgPath, err := config_resolver.New().Resolve(""); err == nil {
 		configPath = cfgPath
+	} else {
+		if userDir, err := os.UserConfigDir(); err == nil {
+			configPath = filepath.Join(userDir, "skill-sync", "skill-sync.yaml")
+			os.MkdirAll(filepath.Dir(configPath), 0755)
+		} else {
+			configPath = "skill-sync.yaml"
+		}
 	}
 
 	root := yaml.Node{
@@ -217,9 +226,13 @@ func saveConfig(targets []string) string {
 
 	targetsSeq := &yaml.Node{Kind: yaml.SequenceNode}
 	for _, t := range targets {
+		skillsPath := t
+		if filepath.Base(t) != "skills" {
+			skillsPath = filepath.Join(t, "skills")
+		}
 		targetsSeq.Content = append(targetsSeq.Content, &yaml.Node{
 			Kind:  yaml.ScalarNode,
-			Value: t,
+			Value: filepath.ToSlash(skillsPath),
 		})
 	}
 	root.Content[0].Content = append(root.Content[0].Content,
@@ -235,8 +248,8 @@ func saveConfig(targets []string) string {
 	}
 	enc.Close()
 
-	if err := os.WriteFile(configPath, buf.Bytes(), 0644); err != nil {
-		return fmt.Sprintf("Failed to save config to %s: %v", configPath, err)
+	if err := writer.AtomicWrite(configPath, buf.Bytes()); err != nil {
+		return fmt.Sprintf("Failed to save config atomically to %s: %v", configPath, err)
 	}
 	return fmt.Sprintf("Configuration saved to %s", configPath)
 }

@@ -44,7 +44,10 @@ func (e *engine) Sync(winner models.SkillInstance, targetDirs []string) error {
 			return fmt.Errorf("failed to create agent dir: %w", err)
 		}
 
-		skillsDir := filepath.Join(targetDir, "skills")
+		skillsDir := targetDir
+		if filepath.Base(targetDir) != "skills" {
+			skillsDir = filepath.Join(targetDir, "skills")
+		}
 		if err := os.MkdirAll(skillsDir, 0755); err != nil {
 			return fmt.Errorf("failed to create skills dir: %w", err)
 		}

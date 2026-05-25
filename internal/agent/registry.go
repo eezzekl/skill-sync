@@ -33,3 +33,13 @@ func ResolvePath(path, home string) string {
 	}
 	return path
 }
+
+// ExpandTargets expands tildes (~) in config target directories using the provided home path.
+func (c *Config) ExpandTargets(home string) {
+	if home == "" {
+		return
+	}
+	for i, t := range c.Targets {
+		c.Targets[i] = ResolvePath(t, home)
+	}
+}

@@ -2,6 +2,7 @@ package cli
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"io"
 	"os"
@@ -9,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/ezzek/skill-sync/internal/agent/discovery"
+	"github.com/ezzek/skill-sync/internal/writer"
 	"github.com/spf13/cobra"
 )
 
@@ -94,16 +96,15 @@ func runInit(cmd *cobra.Command, local, force bool) error {
 		fmt.Fprintln(cmd.OutOrStdout(), "no skills configured")
 	}
 
-	f, err := os.Create(configPath)
-	if err != nil {
-		return fmt.Errorf("failed to create config file: %w", err)
-	}
-	defer f.Close()
-
-	fmt.Fprintln(f, "targets:")
+	var buf bytes.Buffer
+	fmt.Fprintln(&buf, "targets:")
 	for _, t := range targets {
 		skillsPath := filepath.Join(t, "skills")
-		fmt.Fprintf(f, "  - %s\n", filepath.ToSlash(skillsPath))
+		fmt.Fprintf(&buf, "  - %s\n", filepath.ToSlash(skillsPath))
+	}
+
+	if err := writer.AtomicWrite(configPath, buf.Bytes()); err != nil {
+		return fmt.Errorf("failed to create config file atomically: %w", err)
 	}
 
 	fmt.Fprintf(cmd.OutOrStdout(), "Initialized configuration at %s\n", configPath)
