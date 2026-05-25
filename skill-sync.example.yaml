@@ -9,3 +9,4 @@ targets:
   - ~/.cursor
   - ~/.gemini
   - ~/.opencode
+  - ~/.pi/agent

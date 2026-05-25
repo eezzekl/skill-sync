@@ -47,6 +47,9 @@ var SupportedAgents = []AgentConfig{
 	{"Codex", ".codex", ".codex"},
 	{"Windsurf", filepath.Join(".codeium", "windsurf"), filepath.Join(".codeium", "windsurf")},
 	{"GitHub Copilot", ".copilot", ".copilot"},
+	// Pi stores user-authored skills under ~/.pi/agent/skills/.
+	// Package-installed skills (npm/node_modules) are excluded by design — they are managed by npm, not skill-sync.
+	{"Pi", "", filepath.Join(".pi", "agent")},
 }
 
 type Discovery struct {

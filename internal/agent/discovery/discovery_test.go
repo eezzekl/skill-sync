@@ -36,11 +36,14 @@ func TestScan(t *testing.T) {
 				os.MkdirAll(filepath.Join(homeDir, ".claude"), 0755)
 				// Local Cursor
 				os.MkdirAll(filepath.Join(cwdDir, ".cursor"), 0755)
+				// Global Pi
+				os.MkdirAll(filepath.Join(homeDir, ".pi", "agent"), 0755)
 			},
 			expectedDirs: []string{
 				filepath.Join(cwdDir, ".opencode"),
 				filepath.Join(cwdDir, ".cursor"),
 				filepath.Join(homeDir, ".claude"),
+				filepath.Join(homeDir, ".pi", "agent"),
 			},
 		},
 		{
@@ -65,6 +68,7 @@ func TestScan(t *testing.T) {
 				os.MkdirAll(filepath.Join(homeDir, ".codex"), 0755)
 				os.MkdirAll(filepath.Join(homeDir, ".codeium", "windsurf"), 0755)
 				os.MkdirAll(filepath.Join(homeDir, ".copilot"), 0755)
+				os.MkdirAll(filepath.Join(homeDir, ".pi", "agent"), 0755)
 			},
 			expectedDirs: []string{
 				filepath.Join(cwdDir, ".opencode"),
@@ -83,6 +87,7 @@ func TestScan(t *testing.T) {
 				filepath.Join(homeDir, ".codex"),
 				filepath.Join(homeDir, ".codeium", "windsurf"),
 				filepath.Join(homeDir, ".copilot"),
+				filepath.Join(homeDir, ".pi", "agent"),
 			},
 		},
 	}
