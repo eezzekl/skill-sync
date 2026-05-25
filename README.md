@@ -1,6 +1,6 @@
 # skill-sync
 
-**skill-sync** keeps your AI agent skills in sync across all your tools — Claude Code, Cursor, Gemini CLI, OpenCode, Codex, Windsurf, GitHub Copilot, and more.
+**skill-sync** keeps your AI agent skills in sync across all your tools — Claude Code, Cursor, Gemini CLI, OpenCode, Codex, Windsurf, GitHub Copilot, Pi, and more.
 
 It uses a mesh/P2P strategy: no "source of truth" directory. The skill with the highest version (or newest modification time) wins, and it propagates to every other target automatically.
 
@@ -62,6 +62,7 @@ targets:
   - ~/.claude
   - ~/.cursor
   - ~/.gemini
+  - ~/.pi/agent
 ```
 
 > [!NOTE]
@@ -102,6 +103,10 @@ Conflicts (same version + same mtime + different content) are skipped and report
 | Codex | `.codex` | `~/.codex` |
 | Windsurf | `.codeium/windsurf` | `~/.codeium/windsurf` |
 | GitHub Copilot | `.copilot` | `~/.copilot` |
+| Pi | — | `~/.pi/agent` |
+
+> [!NOTE]
+> For Pi, only user-authored skills under `~/.pi/agent/skills/` are synced. Package-installed skills (under `~/.pi/agent/npm/`) are managed by `npm` and are intentionally excluded.
 
 ## Contributing
 
