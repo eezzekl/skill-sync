@@ -1,6 +1,7 @@
 package config_view
 
 import (
+	"path/filepath"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -22,15 +23,23 @@ type Model struct {
 func New(allTargets []string, activeTargets []string) Model {
 	activeMap := make(map[string]bool)
 	for _, t := range activeTargets {
-		activeMap[t] = true
+		cleanT := t
+		if filepath.Base(cleanT) == "skills" {
+			cleanT = filepath.Dir(cleanT)
+		}
+		activeMap[cleanT] = true
 	}
 
 	var items []shared_toggle.Item
 	for _, t := range allTargets {
+		cleanT := t
+		if filepath.Base(cleanT) == "skills" {
+			cleanT = filepath.Dir(cleanT)
+		}
 		items = append(items, shared_toggle.Item{
 			Label:    t,
 			Value:    t,
-			Selected: activeMap[t],
+			Selected: activeMap[cleanT],
 		})
 	}
 

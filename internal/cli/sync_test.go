@@ -196,3 +196,34 @@ func TestNewSyncCmd(t *testing.T) {
 		})
 	}
 }
+
+func TestSyncCmd_TildeExpansion(t *testing.T) {
+	homeDir := t.TempDir()
+	t.Setenv("HOME", homeDir)
+	t.Setenv("USERPROFILE", homeDir)
+
+	toolA := filepath.Join(homeDir, "toolA")
+	toolB := filepath.Join(homeDir, "toolB")
+
+	writeSkillFile(t, toolA, "tilde-skill", "---\nversion: 2\n---\n# Tilde Skill v2")
+	writeSkillFile(t, toolB, "tilde-skill", "---\nversion: 1\n---\n# Tilde Skill v1")
+
+	targets := []string{"~/toolA", "~/toolB"}
+	cfgPath := writeConfigFile(t, homeDir, targets)
+
+	cmd := cli.NewSyncCmd()
+	cmd.SetArgs([]string{"--config", cfgPath})
+
+	if err := cmd.Execute(); err != nil {
+		t.Fatalf("sync returned unexpected error: %v", err)
+	}
+
+	destPath := filepath.Join(toolB, "skills", "tilde-skill", "SKILL.md")
+	got, err := os.ReadFile(destPath)
+	if err != nil {
+		t.Fatalf("failed to read synced file: %v", err)
+	}
+	if !strings.Contains(string(got), "# Tilde Skill v2") {
+		t.Errorf("expected synced content to contain '# Tilde Skill v2', got: %s", string(got))
+	}
+}

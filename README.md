@@ -64,6 +64,9 @@ targets:
   - ~/.gemini
 ```
 
+> [!NOTE]
+> La tilde (`~`) se expande automáticamente a tu directorio Home en todas las plataformas. Además, el motor es sumamente flexible: puedes especificar tanto el directorio raíz del agente (ej. `~/.claude`) como el subdirectorio de skills directo (ej. `~/.claude/skills`). Ambos formatos son válidos.
+
 3. Run the interactive TUI (no arguments):
 
 ```sh

@@ -53,6 +53,10 @@ func ScanSkillInfos(configPath string) ([]models.SkillSyncInfo, error) {
 		return nil, fmt.Errorf("failed to parse config: %w", err)
 	}
 
+	if home, err := os.UserHomeDir(); err == nil {
+		cfg.ExpandTargets(home)
+	}
+
 	scanner := mesh.NewDefaultScanner()
 	skillMap, err := scanner.Scan(cfg.Targets)
 	if err != nil {
@@ -121,6 +125,10 @@ func runSync(cmd *cobra.Command, configPath string, skillFilter []string) error 
 	cfg, err := agent.ParseConfig(f)
 	if err != nil {
 		return fmt.Errorf("failed to parse config: %w", err)
+	}
+
+	if home, err := os.UserHomeDir(); err == nil {
+		cfg.ExpandTargets(home)
 	}
 
 	scanner := mesh.NewDefaultScanner()

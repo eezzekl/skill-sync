@@ -2,6 +2,7 @@ package init_view
 
 import (
 	"fmt"
+	"path/filepath"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -24,15 +25,23 @@ type Model struct {
 func New(discovered []string, existing []string) Model {
 	existingMap := make(map[string]bool)
 	for _, t := range existing {
-		existingMap[t] = true
+		cleanT := t
+		if filepath.Base(cleanT) == "skills" {
+			cleanT = filepath.Dir(cleanT)
+		}
+		existingMap[cleanT] = true
 	}
 
 	var items []shared_toggle.Item
 	for _, t := range discovered {
+		cleanT := t
+		if filepath.Base(cleanT) == "skills" {
+			cleanT = filepath.Dir(cleanT)
+		}
 		items = append(items, shared_toggle.Item{
 			Label:    t,
 			Value:    t,
-			Selected: existingMap[t],
+			Selected: existingMap[cleanT],
 		})
 	}
 
