@@ -11,10 +11,18 @@ import (
 func TestConfigCmd(t *testing.T) {
 	origGetWd := getWd
 	origGetUserConfig := getUserConfig
+	origGetUserHome := getUserHome
 	defer func() {
 		getWd = origGetWd
 		getUserConfig = origGetUserConfig
+		getUserHome = origGetUserHome
 	}()
+
+	// Pin the home seam to an empty directory so these cases never discover the
+	// developer's real agent directories. Global discovery has dedicated
+	// coverage in TestConfigDiscoversGlobalAgents.
+	emptyHome := t.TempDir()
+	getUserHome = func() (string, error) { return emptyHome, nil }
 
 	t.Run("default targets global config", func(t *testing.T) {
 		tempDir := t.TempDir()
@@ -177,4 +185,81 @@ func TestConfigCmd(t *testing.T) {
 			t.Errorf("expected hint to run 'skill-sync init', got: %v", err)
 		}
 	})
+}
+
+// TestConfigDiscoversGlobalAgents mirrors TestInitDiscoversGlobalAgents: the
+// re-discovery path must resolve agent directories against the user home, not
+// against the user config directory.
+func TestConfigDiscoversGlobalAgents(t *testing.T) {
+	origGetWd := getWd
+	origGetUserConfig := getUserConfig
+	origGetUserHome := getUserHome
+	defer func() {
+		getWd = origGetWd
+		getUserConfig = origGetUserConfig
+		getUserHome = origGetUserHome
+	}()
+
+	tests := []struct {
+		name      string
+		globalDir string
+		want      string
+	}{
+		{
+			name:      "discovers Pi which is global only",
+			globalDir: filepath.Join(".pi", "agent"),
+			want:      ".pi/agent/skills",
+		},
+		{
+			name:      "discovers global Gemini CLI",
+			globalDir: ".gemini",
+			want:      ".gemini/skills",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			root := t.TempDir()
+			homeDir := filepath.Join(root, "home")
+			configDir := filepath.Join(root, "xdg_config")
+			cwd := filepath.Join(root, "project")
+
+			if err := os.MkdirAll(filepath.Join(homeDir, tt.globalDir), 0755); err != nil {
+				t.Fatalf("failed to seed agent dir: %v", err)
+			}
+			if err := os.MkdirAll(cwd, 0755); err != nil {
+				t.Fatalf("failed to seed cwd: %v", err)
+			}
+
+			cfgPath := filepath.Join(configDir, "skill-sync", "skill-sync.yaml")
+			if err := os.MkdirAll(filepath.Dir(cfgPath), 0755); err != nil {
+				t.Fatalf("failed to seed config dir: %v", err)
+			}
+			if err := os.WriteFile(cfgPath, []byte("targets:\n  - stale\n"), 0644); err != nil {
+				t.Fatalf("failed to seed config: %v", err)
+			}
+
+			getWd = func() (string, error) { return cwd, nil }
+			getUserConfig = func() (string, error) { return configDir, nil }
+			getUserHome = func() (string, error) { return homeDir, nil }
+
+			cmd := NewConfigCmd()
+			var out bytes.Buffer
+			cmd.SetOut(&out)
+			cmd.SetArgs([]string{})
+
+			if err := cmd.Execute(); err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+
+			content, err := os.ReadFile(cfgPath)
+			if err != nil {
+				t.Fatalf("failed to read updated config: %v", err)
+			}
+
+			if !strings.Contains(string(content), tt.want) {
+				t.Errorf("expected config to contain %q, got:\n%s", tt.want, string(content))
+			}
+		})
+	}
 }
