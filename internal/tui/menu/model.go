@@ -3,7 +3,7 @@ package menu
 import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/ezzek/skill-sync/internal/tui/styles"
+	"github.com/eezzekl/skill-sync/internal/tui/styles"
 )
 
 type MenuSelectionMsg struct {

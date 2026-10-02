@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/ezzek/skill-sync/internal/models"
+	"github.com/eezzekl/skill-sync/internal/models"
 )
 
 func makeSkills(ids ...string) []models.SkillSyncInfo {

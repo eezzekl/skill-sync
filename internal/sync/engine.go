@@ -6,8 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ezzek/skill-sync/internal/models"
-	"github.com/ezzek/skill-sync/internal/writer"
+	"github.com/eezzekl/skill-sync/internal/models"
+	"github.com/eezzekl/skill-sync/internal/writer"
 )
 
 type Engine interface {

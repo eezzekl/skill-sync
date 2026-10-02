@@ -3,7 +3,7 @@ package mesh
 import (
 	"errors"
 
-	"github.com/ezzek/skill-sync/internal/models"
+	"github.com/eezzekl/skill-sync/internal/models"
 )
 
 // Resolver determines the winning skill version.

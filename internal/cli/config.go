@@ -6,8 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ezzek/skill-sync/internal/agent/discovery"
-	"github.com/ezzek/skill-sync/internal/writer"
+	"github.com/eezzekl/skill-sync/internal/agent/discovery"
+	"github.com/eezzekl/skill-sync/internal/writer"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )

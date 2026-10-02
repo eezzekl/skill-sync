@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/ezzek/skill-sync/internal/cli"
+	"github.com/eezzekl/skill-sync/internal/cli"
 )
 
 // version is set at build time via -ldflags "-X main.version=vX.Y.Z"

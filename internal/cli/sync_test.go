@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ezzek/skill-sync/internal/cli"
+	"github.com/eezzekl/skill-sync/internal/cli"
 )
 
 // helper: create a SKILL.md file with given content at <dir>/skills/<skillID>/SKILL.md

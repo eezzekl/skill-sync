@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ezzek/skill-sync/internal/agent"
+	"github.com/eezzekl/skill-sync/internal/agent"
 )
 
 func TestParseConfig(t *testing.T) {

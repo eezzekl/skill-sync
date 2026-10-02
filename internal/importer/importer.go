@@ -10,9 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ezzek/skill-sync/internal/mesh"
-	"github.com/ezzek/skill-sync/internal/models"
-	"github.com/ezzek/skill-sync/internal/writer"
+	"github.com/eezzekl/skill-sync/internal/mesh"
+	"github.com/eezzekl/skill-sync/internal/models"
+	"github.com/eezzekl/skill-sync/internal/writer"
 	"gopkg.in/yaml.v3"
 )
 

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/ezzek/skill-sync/internal/importer"
-	"github.com/ezzek/skill-sync/internal/models"
-	"github.com/ezzek/skill-sync/internal/tui"
+	"github.com/eezzekl/skill-sync/internal/importer"
+	"github.com/eezzekl/skill-sync/internal/models"
+	"github.com/eezzekl/skill-sync/internal/tui"
 	"github.com/spf13/cobra"
 )
 

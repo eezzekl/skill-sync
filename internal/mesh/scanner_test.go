@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/ezzek/skill-sync/internal/mesh"
+	"github.com/eezzekl/skill-sync/internal/mesh"
 )
 
 func TestScanner_Scan(t *testing.T) {

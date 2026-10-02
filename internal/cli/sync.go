@@ -5,12 +5,12 @@ import (
 	"os"
 	"sort"
 
-	"github.com/ezzek/skill-sync/internal/agent"
-	"github.com/ezzek/skill-sync/internal/agent/config_resolver"
-	"github.com/ezzek/skill-sync/internal/agent/discovery"
-	"github.com/ezzek/skill-sync/internal/mesh"
-	"github.com/ezzek/skill-sync/internal/models"
-	internalsync "github.com/ezzek/skill-sync/internal/sync"
+	"github.com/eezzekl/skill-sync/internal/agent"
+	"github.com/eezzekl/skill-sync/internal/agent/config_resolver"
+	"github.com/eezzekl/skill-sync/internal/agent/discovery"
+	"github.com/eezzekl/skill-sync/internal/mesh"
+	"github.com/eezzekl/skill-sync/internal/models"
+	internalsync "github.com/eezzekl/skill-sync/internal/sync"
 	"github.com/spf13/cobra"
 )
 

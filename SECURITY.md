@@ -13,7 +13,7 @@ Only the latest stable release receives security fixes.
 
 **Do not open a public GitHub issue for security vulnerabilities.**
 
-Report security issues privately via [GitHub Security Advisories](https://github.com/ezzek/skill-sync/security/advisories/new).
+Report security issues privately via [GitHub Security Advisories](https://github.com/eezzekl/skill-sync/security/advisories/new).
 
 ### What to Include
 
