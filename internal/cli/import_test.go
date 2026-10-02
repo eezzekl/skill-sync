@@ -81,7 +81,7 @@ func TestImportCmd(t *testing.T) {
 				noCfg := filepath.Join(base, "nonexistent.yaml")
 				return []string{"git-expert"}, noCfg, base
 			},
-			verify: func(t *testing.T, base string, stdout, stderr string, err error) {},
+			verify:     func(t *testing.T, base string, stdout, stderr string, err error) {},
 			wantErr:    true,
 			wantErrMsg: "skill-sync init",
 		},
@@ -93,7 +93,7 @@ func TestImportCmd(t *testing.T) {
 				cfgPath := writeImportConfig(t, base, []string{toolA})
 				return []string{"nonexistent-skill"}, cfgPath, base
 			},
-			verify: func(t *testing.T, base string, stdout, stderr string, err error) {},
+			verify:     func(t *testing.T, base string, stdout, stderr string, err error) {},
 			wantErr:    true,
 			wantErrMsg: "not found",
 		},
@@ -104,7 +104,7 @@ func TestImportCmd(t *testing.T) {
 				_ = os.WriteFile(cfgPath, []byte("targets:\n  - /tmp\n"), 0644)
 				return []string{}, cfgPath, base
 			},
-			verify: func(t *testing.T, base string, stdout, stderr string, err error) {},
+			verify:     func(t *testing.T, base string, stdout, stderr string, err error) {},
 			wantErr:    true,
 			wantErrMsg: "accepts 1 arg",
 		},
@@ -115,7 +115,7 @@ func TestImportCmd(t *testing.T) {
 				_ = os.WriteFile(cfgPath, []byte("targets:\n  - /tmp\n"), 0644)
 				return []string{"arg1", "arg2"}, cfgPath, base
 			},
-			verify: func(t *testing.T, base string, stdout, stderr string, err error) {},
+			verify:     func(t *testing.T, base string, stdout, stderr string, err error) {},
 			wantErr:    true,
 			wantErrMsg: "accepts 1 arg",
 		},
@@ -137,7 +137,7 @@ func TestImportCmd(t *testing.T) {
 				cfgPath := writeImportConfig(t, base, []string{toolA, toolB})
 				return []string{"ambiguous-skill"}, cfgPath, base
 			},
-			verify: func(t *testing.T, base string, stdout, stderr string, err error) {},
+			verify:     func(t *testing.T, base string, stdout, stderr string, err error) {},
 			wantErr:    true,
 			wantErrMsg: "conflict",
 		},
