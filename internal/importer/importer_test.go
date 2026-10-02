@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ezzek/skill-sync/internal/models"
+	"github.com/eezzekl/skill-sync/internal/models"
 )
 
 // makeSkillDir creates a minimal skill directory with a SKILL.md at

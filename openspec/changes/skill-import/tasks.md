@@ -236,7 +236,7 @@ GREEN:
 
 **Steps:**
 1. Add `cmd.AddCommand(NewImportCmd())` in `NewRootCmd`.
-2. Add `"os"`, `"path/filepath"`, `"fmt"`, `"github.com/ezzek/skill-sync/internal/importer"` imports.
+2. Add `"os"`, `"path/filepath"`, `"fmt"`, `"github.com/eezzekl/skill-sync/internal/importer"` imports.
 3. Wire `FindSkillsForImport` and `RunImport` callbacks in the default `RunE` (design §11.2):
    - `FindSkillsForImport`: build `importer.New(sources, destRoot)` from `sources` arg + `cwd`; return `FindAllSkills()`.
    - `RunImport`: guard `candidate.IsConflict → ErrConflict`; build `importer.New(nil, destRoot)`; call `CopySkill`.

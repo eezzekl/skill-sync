@@ -142,9 +142,9 @@ import (
     "strings"
     "time"
 
-    "github.com/ezzek/skill-sync/internal/mesh"
-    "github.com/ezzek/skill-sync/internal/models"
-    "github.com/ezzek/skill-sync/internal/writer"
+    "github.com/eezzekl/skill-sync/internal/mesh"
+    "github.com/eezzekl/skill-sync/internal/models"
+    "github.com/eezzekl/skill-sync/internal/writer"
     "gopkg.in/yaml.v3"
 )
 
@@ -442,8 +442,8 @@ import (
     "strings"
 
     tea "github.com/charmbracelet/bubbletea"
-    "github.com/ezzek/skill-sync/internal/tui/shared_toggle"
-    "github.com/ezzek/skill-sync/internal/tui/styles"
+    "github.com/eezzekl/skill-sync/internal/tui/shared_toggle"
+    "github.com/eezzekl/skill-sync/internal/tui/styles"
 )
 
 // ConfirmedMsg carries the subset of source directories the user kept checked.
@@ -533,8 +533,8 @@ import (
     "strings"
 
     tea "github.com/charmbracelet/bubbletea"
-    "github.com/ezzek/skill-sync/internal/importer"
-    "github.com/ezzek/skill-sync/internal/tui/styles"
+    "github.com/eezzekl/skill-sync/internal/importer"
+    "github.com/eezzekl/skill-sync/internal/tui/styles"
 )
 
 // ConfirmedMsg carries the skill the user selected for import.
@@ -644,9 +644,9 @@ func (m Model) View() string {
 ### 8.1 New imports
 
 ```go
-"github.com/ezzek/skill-sync/internal/importer"
-"github.com/ezzek/skill-sync/internal/tui/import_source_view"
-"github.com/ezzek/skill-sync/internal/tui/import_skill_view"
+"github.com/eezzekl/skill-sync/internal/importer"
+"github.com/eezzekl/skill-sync/internal/tui/import_source_view"
+"github.com/eezzekl/skill-sync/internal/tui/import_skill_view"
 ```
 
 ### 8.2 State constants (add after `stateOutput`)
@@ -812,9 +812,9 @@ import (
     "os"
     "path/filepath"
 
-    "github.com/ezzek/skill-sync/internal/agent"
-    "github.com/ezzek/skill-sync/internal/agent/config_resolver"
-    "github.com/ezzek/skill-sync/internal/importer"
+    "github.com/eezzekl/skill-sync/internal/agent"
+    "github.com/eezzekl/skill-sync/internal/agent/config_resolver"
+    "github.com/eezzekl/skill-sync/internal/importer"
     "github.com/spf13/cobra"
 )
 
@@ -940,7 +940,7 @@ New imports needed in `root.go`:
 "os"
 "path/filepath"
 "fmt"
-"github.com/ezzek/skill-sync/internal/importer"
+"github.com/eezzekl/skill-sync/internal/importer"
 ```
 
 ---

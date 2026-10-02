@@ -5,9 +5,9 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/ezzek/skill-sync/internal/models"
-	"github.com/ezzek/skill-sync/internal/tui/shared_toggle"
-	"github.com/ezzek/skill-sync/internal/tui/styles"
+	"github.com/eezzekl/skill-sync/internal/models"
+	"github.com/eezzekl/skill-sync/internal/tui/shared_toggle"
+	"github.com/eezzekl/skill-sync/internal/tui/styles"
 )
 
 // SyncSelectedMsg carries the skill IDs the user confirmed for sync.

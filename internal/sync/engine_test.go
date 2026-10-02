@@ -6,8 +6,8 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/ezzek/skill-sync/internal/models"
-	"github.com/ezzek/skill-sync/internal/sync"
+	"github.com/eezzekl/skill-sync/internal/models"
+	"github.com/eezzekl/skill-sync/internal/sync"
 )
 
 func TestEngine_Sync(t *testing.T) {

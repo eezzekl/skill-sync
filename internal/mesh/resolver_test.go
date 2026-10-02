@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ezzek/skill-sync/internal/mesh"
-	"github.com/ezzek/skill-sync/internal/models"
+	"github.com/eezzekl/skill-sync/internal/mesh"
+	"github.com/eezzekl/skill-sync/internal/models"
 )
 
 func TestResolver_Resolve(t *testing.T) {

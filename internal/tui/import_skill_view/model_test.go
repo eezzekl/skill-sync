@@ -9,8 +9,8 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/x/exp/teatest"
-	"github.com/ezzek/skill-sync/internal/importer"
-	"github.com/ezzek/skill-sync/internal/models"
+	"github.com/eezzekl/skill-sync/internal/importer"
+	"github.com/eezzekl/skill-sync/internal/models"
 )
 
 func makeCandidate(skillID, name, desc string, isConflict bool) importer.SkillCandidate {

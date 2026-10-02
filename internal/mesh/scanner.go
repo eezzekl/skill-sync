@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ezzek/skill-sync/internal/models"
+	"github.com/eezzekl/skill-sync/internal/models"
 	"gopkg.in/yaml.v3"
 )
 

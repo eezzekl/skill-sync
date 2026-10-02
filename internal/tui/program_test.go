@@ -4,15 +4,15 @@ import (
 	"testing"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/ezzek/skill-sync/internal/importer"
-	"github.com/ezzek/skill-sync/internal/models"
-	"github.com/ezzek/skill-sync/internal/tui/config_view"
-	"github.com/ezzek/skill-sync/internal/tui/import_skill_view"
-	"github.com/ezzek/skill-sync/internal/tui/import_source_view"
-	"github.com/ezzek/skill-sync/internal/tui/init_view"
-	"github.com/ezzek/skill-sync/internal/tui/menu"
-	"github.com/ezzek/skill-sync/internal/tui/output_view"
-	"github.com/ezzek/skill-sync/internal/tui/sync_select_view"
+	"github.com/eezzekl/skill-sync/internal/importer"
+	"github.com/eezzekl/skill-sync/internal/models"
+	"github.com/eezzekl/skill-sync/internal/tui/config_view"
+	"github.com/eezzekl/skill-sync/internal/tui/import_skill_view"
+	"github.com/eezzekl/skill-sync/internal/tui/import_source_view"
+	"github.com/eezzekl/skill-sync/internal/tui/init_view"
+	"github.com/eezzekl/skill-sync/internal/tui/menu"
+	"github.com/eezzekl/skill-sync/internal/tui/output_view"
+	"github.com/eezzekl/skill-sync/internal/tui/sync_select_view"
 )
 
 func TestRootModelTransitions(t *testing.T) {

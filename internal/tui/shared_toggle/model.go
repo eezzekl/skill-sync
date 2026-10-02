@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/ezzek/skill-sync/internal/tui/styles"
+	"github.com/eezzekl/skill-sync/internal/tui/styles"
 )
 
 type Item struct {

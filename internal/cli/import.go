@@ -6,9 +6,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ezzek/skill-sync/internal/agent"
-	"github.com/ezzek/skill-sync/internal/agent/config_resolver"
-	"github.com/ezzek/skill-sync/internal/importer"
+	"github.com/eezzekl/skill-sync/internal/agent"
+	"github.com/eezzekl/skill-sync/internal/agent/config_resolver"
+	"github.com/eezzekl/skill-sync/internal/importer"
 	"github.com/spf13/cobra"
 )
 

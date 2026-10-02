@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ezzek/skill-sync/internal/cli"
+	"github.com/eezzekl/skill-sync/internal/cli"
 )
 
 func TestNewVerifyCmd(t *testing.T) {
