@@ -2,7 +2,10 @@ package cli
 
 import (
 	"bytes"
+	"fmt"
+	"path/filepath"
 
+	"github.com/ezzek/skill-sync/internal/importer"
 	"github.com/ezzek/skill-sync/internal/models"
 	"github.com/ezzek/skill-sync/internal/tui"
 	"github.com/spf13/cobra"
@@ -38,6 +41,30 @@ func NewRootCmd(version string) *cobra.Command {
 					err := verifyCmd.RunE(verifyCmd, nil)
 					return buf.String(), err
 				},
+				FindSkillsForImport: func(sources []string) ([]importer.SkillCandidate, error) {
+					cwd, err := getWd()
+					if err != nil {
+						return nil, err
+					}
+					destRoot := filepath.Join(cwd, ".agents", "skills")
+					imp := importer.New(sources, destRoot)
+					return imp.FindAllSkills()
+				},
+				RunImport: func(candidate importer.SkillCandidate) (string, error) {
+					if candidate.IsConflict {
+						return "", importer.ErrConflict
+					}
+					cwd, err := getWd()
+					if err != nil {
+						return "", err
+					}
+					destRoot := filepath.Join(cwd, ".agents", "skills")
+					imp := importer.New(nil, destRoot)
+					if err := imp.CopySkill(candidate.SkillID, candidate.SourceDir); err != nil {
+						return "", err
+					}
+					return fmt.Sprintf("Imported %s from %s", candidate.SkillID, candidate.SourceDir), nil
+				},
 			}
 			return tui.NewProgram(callbacks).Run()
 		},
@@ -47,6 +74,7 @@ func NewRootCmd(version string) *cobra.Command {
 	cmd.AddCommand(NewConfigCmd())
 	cmd.AddCommand(NewSyncCmd())
 	cmd.AddCommand(NewVerifyCmd())
+	cmd.AddCommand(NewImportCmd())
 
 	return cmd
 }

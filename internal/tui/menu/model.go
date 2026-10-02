@@ -27,6 +27,7 @@ func New() Model {
 		item{title: "Init", desc: "Initialize configuration and discover skills"},
 		item{title: "Sync", desc: "Synchronize skills across directories"},
 		item{title: "Verify", desc: "Check for drift without syncing"},
+		item{title: "Import", desc: "Import a skill from a configured agent source"},
 		item{title: "Config", desc: "Configure sync targets"},
 		item{title: "Quit", desc: "Exit the application"},
 	}

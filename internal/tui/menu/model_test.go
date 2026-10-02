@@ -49,3 +49,26 @@ func TestMenuSelection(t *testing.T) {
 		t.Errorf("Expected tea.Quit on 'q'")
 	}
 }
+
+func TestMenuContainsImportItem(t *testing.T) {
+	m := New()
+
+	// Navigate down 3 times: Init(0) → Sync(1) → Verify(2) → Import(3)
+	cur := tea.Model(m)
+	for i := 0; i < 3; i++ {
+		cur, _ = cur.Update(tea.KeyMsg{Type: tea.KeyDown})
+	}
+
+	_, cmd := cur.Update(tea.KeyMsg{Type: tea.KeyEnter})
+	if cmd == nil {
+		t.Fatal("expected command on enter at Import position")
+	}
+	msg := cmd()
+	selMsg, ok := msg.(MenuSelectionMsg)
+	if !ok {
+		t.Fatalf("expected MenuSelectionMsg, got %T", msg)
+	}
+	if selMsg.Selection != "Import" {
+		t.Errorf("expected 'Import', got %q", selMsg.Selection)
+	}
+}
