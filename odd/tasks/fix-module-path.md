@@ -41,7 +41,7 @@ repository path. That test fails today and would have caught the bug on day one.
 - [x] 3. Fix the broken `SECURITY.md` advisory URL.
 - [x] 4. Update the import examples in the openspec design/tasks documents.
 - [x] 5. Verify: full suite with `-race`, `go vet`, `gofmt`, cross-compile matrix.
-- [ ] 6. Release `v1.1.0` so the proxy's `@latest` moves off `v1.0.0`.
+- [x] 6. Release `v1.1.0` so the proxy's `@latest` moves off `v1.0.0`.
 
 ## Note on `v1.0.0`
 
@@ -74,3 +74,24 @@ broken path as evidence, leaving self-contradictory text ("declares
 `.../eezzekl/...` but the repository is `.../eezzekl/...` — the final `l` is
 missing"). The evidence block was restored by hand. A blind repository-wide
 replacement will corrupt any document that intentionally quotes the old value.
+
+**Release (task 6)** — `v1.1.0` on `bd9e270`, GoReleaser run 37076300365 success.
+GitHub release (7 assets, `releases/latest` → `v1.1.0`), Homebrew tap `1.1.0`,
+Scoop bucket `1.1.0`.
+
+`go install` verified working for the first time:
+
+```
+$ go install github.com/eezzekl/skill-sync/cmd/skill-sync@latest
+$ go version -m $GOBIN/skill-sync
+	mod	github.com/eezzekl/skill-sync	v1.1.0
+```
+
+The raw `proxy.golang.org/.../@latest` JSON endpoint still returns a cached
+`v1.0.0`, but the `go` command resolves `@latest` from the version list and picks
+the highest semver, so consumers get `v1.1.0`. Publishing a semver-greater tag
+was therefore the correct fix; deleting `v1.0.0` would not have achieved it.
+
+**Known minor gap:** binaries from `go install` report `skill-sync version dev`,
+because the GoReleaser `-X main.version=` ldflag is not applied. Reading
+`runtime/debug.ReadBuildInfo()` as a fallback would fix this. Not addressed here.
