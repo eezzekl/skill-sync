@@ -37,6 +37,7 @@ func NewInitCmd() *cobra.Command {
 var (
 	getWd                   = os.Getwd
 	getUserConfig           = os.UserConfigDir
+	getUserHome             = os.UserHomeDir
 	stdinReader   io.Reader = os.Stdin
 	isTTY                   = func() bool {
 		st, err := os.Stdin.Stat()
@@ -83,9 +84,11 @@ func runInit(cmd *cobra.Command, local, force bool) error {
 		}
 	}
 
+	// Agent directories live under the user home, not under the user config
+	// directory. These two lookups must stay separate.
 	d := discovery.New()
 	d.Getwd = getWd
-	d.UserHomeDir = func() (string, error) { return getUserConfig() }
+	d.UserHomeDir = getUserHome
 
 	targets, err := d.Scan()
 	if err != nil {

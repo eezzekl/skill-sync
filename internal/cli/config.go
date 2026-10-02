@@ -60,9 +60,11 @@ func runConfig(cmd *cobra.Command, local bool, explicitPath string) error {
 		return fmt.Errorf("no configuration found at %s; run 'skill-sync init' to create one", configPath)
 	}
 
+	// Agent directories live under the user home, not under the user config
+	// directory. These two lookups must stay separate.
 	d := discovery.New()
 	d.Getwd = getWd
-	d.UserHomeDir = func() (string, error) { return getUserConfig() }
+	d.UserHomeDir = getUserHome
 
 	discovered, err := d.Scan()
 	if err != nil {
