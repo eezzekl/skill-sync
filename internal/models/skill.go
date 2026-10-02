@@ -7,8 +7,9 @@ import "time"
 // cleanly; plain integers ("version: 2") still parse as 2.0 and compare
 // correctly against decimals.
 type SkillMetadata struct {
-	Version float64 `yaml:"version"`
-	Name    string  `yaml:"name"`
+	Version     float64 `yaml:"version"`
+	Name        string  `yaml:"name"`
+	Description string  `yaml:"description"`
 }
 
 // SkillInstance represents a single skill file found in a target directory.

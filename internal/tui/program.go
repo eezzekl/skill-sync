@@ -10,8 +10,11 @@ import (
 	"github.com/ezzek/skill-sync/internal/agent"
 	"github.com/ezzek/skill-sync/internal/agent/config_resolver"
 	"github.com/ezzek/skill-sync/internal/agent/discovery"
+	"github.com/ezzek/skill-sync/internal/importer"
 	"github.com/ezzek/skill-sync/internal/models"
 	"github.com/ezzek/skill-sync/internal/tui/config_view"
+	"github.com/ezzek/skill-sync/internal/tui/import_skill_view"
+	"github.com/ezzek/skill-sync/internal/tui/import_source_view"
 	"github.com/ezzek/skill-sync/internal/tui/init_view"
 	"github.com/ezzek/skill-sync/internal/tui/menu"
 	"github.com/ezzek/skill-sync/internal/tui/output_view"
@@ -28,23 +31,29 @@ const (
 	stateConfig
 	stateSyncSelect
 	stateOutput
+	stateImportSource
+	stateImportSkill
 )
 
 type Callbacks struct {
-	ScanSkills func() ([]models.SkillSyncInfo, error)
-	RunSync    func(skillFilter []string) (string, error)
-	RunVerify  func() (string, error)
+	ScanSkills          func() ([]models.SkillSyncInfo, error)
+	RunSync             func(skillFilter []string) (string, error)
+	RunVerify           func() (string, error)
+	FindSkillsForImport func(sources []string) ([]importer.SkillCandidate, error)
+	RunImport           func(candidate importer.SkillCandidate) (string, error)
 }
 
 type RootModel struct {
-	state           state
-	menuModel       menu.Model
-	initModel       tea.Model
-	cfgModel        tea.Model
-	syncSelectModel tea.Model
-	outModel        tea.Model
-
-	callbacks Callbacks
+	state             state
+	menuModel         menu.Model
+	initModel         tea.Model
+	cfgModel          tea.Model
+	syncSelectModel   tea.Model
+	outModel          tea.Model
+	importSourceModel tea.Model
+	importSkillModel  tea.Model
+	importSources     []string // targets used to build importSourceModel
+	callbacks         Callbacks
 }
 
 func NewRootModel(callbacks Callbacks) RootModel {
@@ -116,6 +125,17 @@ func (m RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.outModel = output_view.New(out)
 			m.state = stateOutput
 			return m, m.outModel.Init()
+
+		case "Import":
+			targets, err := loadImportTargets()
+			if err != nil {
+				m.outModel = output_view.New("Error loading config: " + err.Error())
+				m.state = stateOutput
+				return m, m.outModel.Init()
+			}
+			m.importSourceModel = import_source_view.New(targets)
+			m.state = stateImportSource
+			return m, m.importSourceModel.Init()
 		}
 
 	case init_view.InitConfigMsg:
@@ -151,6 +171,42 @@ func (m RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case output_view.DoneMsg:
 		m.state = stateMenu
 		return m, m.menuModel.Init()
+
+	case import_source_view.ConfirmedMsg:
+		m.importSources = msg.Sources
+		candidates, err := m.callbacks.FindSkillsForImport(msg.Sources)
+		if err != nil {
+			m.outModel = output_view.New("Error scanning skills: " + err.Error())
+			m.state = stateOutput
+			return m, m.outModel.Init()
+		}
+		if len(candidates) == 0 {
+			m.outModel = output_view.New("No skills found in the selected sources.")
+			m.state = stateOutput
+			return m, m.outModel.Init()
+		}
+		m.importSkillModel = import_skill_view.New(candidates)
+		m.state = stateImportSkill
+		return m, m.importSkillModel.Init()
+
+	case import_source_view.BackMsg:
+		m.state = stateMenu
+		return m, m.menuModel.Init()
+
+	case import_skill_view.ConfirmedMsg:
+		out, err := m.callbacks.RunImport(msg.Candidate)
+		if err != nil {
+			out = "Import error: " + err.Error()
+		}
+		m.outModel = output_view.New(out)
+		m.state = stateOutput
+		return m, m.outModel.Init()
+
+	case import_skill_view.BackMsg:
+		m.importSkillModel = nil
+		m.importSourceModel = import_source_view.New(m.importSources)
+		m.state = stateImportSource
+		return m, m.importSourceModel.Init()
 	}
 
 	var cmd tea.Cmd
@@ -183,6 +239,18 @@ func (m RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if updated != nil {
 			m.outModel = updated
 		}
+	case stateImportSource:
+		var updated tea.Model
+		updated, cmd = m.importSourceModel.Update(msg)
+		if updated != nil {
+			m.importSourceModel = updated
+		}
+	case stateImportSkill:
+		var updated tea.Model
+		updated, cmd = m.importSkillModel.Update(msg)
+		if updated != nil {
+			m.importSkillModel = updated
+		}
 	}
 
 	return m, cmd
@@ -200,6 +268,10 @@ func (m RootModel) View() string {
 		return m.syncSelectModel.View()
 	case stateOutput:
 		return m.outModel.View()
+	case stateImportSource:
+		return m.importSourceModel.View()
+	case stateImportSkill:
+		return m.importSkillModel.View()
 	}
 	return ""
 }
@@ -252,6 +324,27 @@ func saveConfig(targets []string) string {
 		return fmt.Sprintf("Failed to save config atomically to %s: %v", configPath, err)
 	}
 	return fmt.Sprintf("Configuration saved to %s", configPath)
+}
+
+// loadImportTargets resolves skill-sync.yaml and returns the expanded target list.
+func loadImportTargets() ([]string, error) {
+	cfgPath, err := config_resolver.New().Resolve("")
+	if err != nil {
+		return nil, fmt.Errorf("no skill-sync.yaml found; run 'skill-sync init' to create one")
+	}
+	f, err := os.Open(cfgPath)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	cfg, err := agent.ParseConfig(f)
+	if err != nil {
+		return nil, err
+	}
+	if home, err := os.UserHomeDir(); err == nil {
+		cfg.ExpandTargets(home)
+	}
+	return cfg.Targets, nil
 }
 
 type Program struct {
