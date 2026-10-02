@@ -1,0 +1,52 @@
+# OpenSpec / SDD configuration for skill-sync
+#
+# This file tells SDD phase agents (sdd-proposal, sdd-spec, sdd-design,
+# sdd-tasks, sdd-apply, sdd-verify, sdd-archive) how this project expects
+# to be worked on.
+
+project:
+  name: skill-sync
+  language: go
+  go_version: "1.26.1"
+  description: >
+    Multidirectional (mesh / P2P) CLI + TUI to synchronize AI agent
+    skills across tool directories (Claude, Cursor, OpenCode, Pi, etc.).
+
+testing:
+  strict_tdd: true
+  discipline: RED -> GREEN -> TRIANGULATE -> REFACTOR
+  test_command: "go test ./..."
+  coverage_command: "go test -cover ./..."
+  style:
+    - table-driven tests are mandatory
+    - integration tests for Engine and CLI commands must use real temp dirs
+    - never mock the filesystem unless absolutely required
+    - OS-specific failure paths may be guarded with t.Skip on Windows
+
+artifacts:
+  store: openspec
+  location: openspec/
+  changes_dir: openspec/changes
+  specs_dir: openspec/specs
+
+review:
+  budget_lines: 400
+  chained_pr_strategy: single-pr-default
+  pause_before_apply_if_exceeds: true
+
+execution:
+  mode: interactive
+  pause_between_phases: true
+
+cli:
+  silence_usage: true
+  framework: cobra
+  entrypoint: cmd/skill-sync/main.go
+
+tui:
+  framework: bubbletea
+  golden_files: true
+  testing_helper: teatest
+
+pending_fixes:
+  - context/pending-fixes.md
