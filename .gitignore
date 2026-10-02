@@ -30,3 +30,11 @@ Thumbs.db
 # SDD skill registry (contiene rutas absolutas de la máquina local)
 .atl/
 
+# Directorios locales de herramientas de agentes IA (config y caché por máquina)
+.pi/
+.pi-lens/
+.antigravitycli/
+
+# Residuo de tests (backups escritos por el writer durante la suite)
+*.yaml.bak
+
